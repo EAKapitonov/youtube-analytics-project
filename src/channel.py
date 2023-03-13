@@ -43,12 +43,11 @@ class Channel:
         import src
         return src.channel.youtube
 
-    @property
-    def to_json(self, file_):
+
+    def to_json(self, name: str):
         """создаем файл 'file' c данными по каналу"""
-        with open(file_, 'w', encoding="utf-8") as f:
+        with open(f"{name}", 'w+') as outfile:
             channel = youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
-            name = json.dumps(channel, indent=2, ensure_ascii=False)
-            f.write(name)
+            json.dump(channel, outfile)
 
 

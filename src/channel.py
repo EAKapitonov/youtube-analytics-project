@@ -37,8 +37,8 @@ class Channel:
         """ чтобы id нельзя было поменять из вне"""
         return self._channel_id
 
-    @staticmethod
-    def get_service():
+    @classmethod
+    def get_service(cls):
         """ получить объект для работы с API вне класса"""
         import src
         return src.channel.youtube

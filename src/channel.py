@@ -37,7 +37,7 @@ class Channel:
         """ чтобы id нельзя было поменять из вне"""
         return self._channel_id
 
-    @staticmethod
+    @classmethod
     def get_service():
         """ получить объект для работы с API вне класса"""
         import src

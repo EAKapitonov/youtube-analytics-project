@@ -38,7 +38,7 @@ class Channel:
         return self._channel_id
 
     @classmethod
-    def get_service():
+    def get_service(cls):
         """ получить объект для работы с API вне класса"""
         import src
         return src.channel.youtube

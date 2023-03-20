@@ -50,4 +50,22 @@ class Channel:
             channel = youtube.channels().list(id=self.channel_id, part='snippet,statistics').execute()
             json.dump(channel, outfile)
 
+    def __str__(self):
+        """ <название_канала> (<ссылка_на_канал>)"""
+        return f"{self.title} ({self.url})"
+
+    def __add__(self, other):
+        """метод суммирования подписчиков канала, возвращает сумму подписчиков"""
+        return int(self.subscriberCount) + int(other.subscriberCount)
+
+    def __sub__(self, other):
+        """метод вычитания подписчиков канала, возвращает разность подписчиков"""
+        return int(self.subscriberCount) - int(other.subscriberCount)
+
+    def __ge__(self, other):
+        """метод сравнения подписчиков канала, возвращает булеву сравнения подписчиков"""
+        return int(self.subscriberCount) >= int(other.subscriberCount)
+
+
+
 

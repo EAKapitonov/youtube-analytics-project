@@ -27,6 +27,13 @@ class PlayList:
                                                        maxResults=50,
                                                        ).execute()
         self.url = "https://www.youtube.com/playlist?list=" + self.id
+        playlists = youtube.playlists().list(channelId=self.playlist_videos["items"][0]["snippet"]["channelId"],
+                                             part='contentDetails,snippet',
+                                             maxResults=50,
+                                             ).execute()
+        for playlist in playlists['items']:
+            if playlist["id"] == self.id:
+                self.title = playlist["snippet"]["title"]
 
 
     @property
@@ -59,14 +66,5 @@ class PlayList:
         best_video = Video(best_video_id)
         return best_video.video_url
 
-pl = PlayList('PLguYHBi01DWr4bRWc4uaguASmo7lW4GCb')
-pl.total_duration
 
-channel_id = 'UC1eFXmJNkjITxPFWTy6RsWg'
-playlists = youtube.playlists().list(channelId=channel_id,
-                                     part='contentDetails,snippet',
-                                     maxResults=50,
-                                     ).execute()
-# printj(playlists)
-for playlist in playlists['items']:
-    if.
+

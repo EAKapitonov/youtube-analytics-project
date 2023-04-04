@@ -23,18 +23,15 @@ class PlayList:
     def __init__(self, id_playlist):
         self.id = id_playlist
         self.playlist_videos = youtube.playlistItems().list(playlistId=self.id,
-                                                       part='contentDetails,snippet',
-                                                       maxResults=50,
-                                                       ).execute()
+                                                            part='contentDetails,snippet',
+                                                            maxResults=50,
+                                                            ).execute()
         self.url = "https://www.youtube.com/playlist?list=" + self.id
-        playlists = youtube.playlists().list(channelId=self.playlist_videos["items"][0]["snippet"]["channelId"],
-                                             part='contentDetails,snippet',
-                                             maxResults=50,
-                                             ).execute()
-        for playlist in playlists['items']:
-            if playlist["id"] == self.id:
-                self.title = playlist["snippet"]["title"]
-
+        playlists = playlist_videos = youtube.playlists().list(id=id_playlist,
+                                           part='snippet',
+                                           maxResults=50,
+                                           ).execute()
+        self.title = playlists['items'][0]["snippet"]["title"]
 
     @property
     def total_duration(self):
@@ -51,7 +48,6 @@ class PlayList:
             x = x + isodate.parse_duration(duration['contentDetails']['duration'])
         return x
 
-
     def show_best_video(self):
         """
         Show_best_video()` возвращает ссылку на самое популярное видео из плейлиста (по количеству лайков)
@@ -65,6 +61,5 @@ class PlayList:
                 best_video_id = vid.video_id
         best_video = Video(best_video_id)
         return best_video.video_url
-
 
 

@@ -1,16 +1,19 @@
-import json
-import os
-
-# необходимо установить через: pip install google-api-python-client
+# from googleapiclient.errors import HttpError
 from googleapiclient.discovery import build
-
-import isodate
+import os
 
 # YT_API_KEY скопирован из гугла и вставлен в переменные окружения
 api_key: str = os.getenv('youtube_api')
 
 # создать специальный объект для работы с API
 youtube = build('youtube', 'v3', developerKey=api_key)
+
+
+class Vid_error(Exception):
+    """
+    Класс обработки исключения видео
+    """
+    pass
 
 
 class Video:
@@ -22,15 +25,29 @@ class Video:
   - количество просмотров
   - количество лайков
     """
+
     def __init__(self, video_id):
         video_response = youtube.videos().list(part='snippet,statistics,contentDetails,topicDetails',
                                                id=video_id
                                                ).execute()
-        self.video_id = video_id
-        self.video_name = video_response["items"][0]["snippet"]["title"]
-        self.video_url = f"https://youtu.be/{self.video_id}"
-        self.view_count = video_response['items'][0]['statistics']['viewCount']
-        self.like_count = video_response['items'][0]['statistics']['likeCount']
+        try:
+            if not video_response['items']:
+                raise Vid_error
+            else:
+
+                self.video_id = video_id
+                self.video_name = video_response["items"][0]["snippet"]["title"]
+                self.video_url = f"https://youtu.be/{self.video_id}"
+                self.view_count = video_response['items'][0]['statistics']['viewCount']
+                self.like_count = video_response['items'][0]['statistics']['likeCount']
+
+        except Vid_error:
+            self.video_id = video_id
+            self.video_name = None
+            self.video_url = None
+            self.view_count = None
+            self.like_count = None
+
 
     def __str__(self):
         return self.video_name
@@ -48,6 +65,7 @@ class PLVideo(Video):
          - количество лайков
          - id плейлиста
     """
+
     def __init__(self, video_id, playlist_id):
         super().__init__(video_id)
         self.playlist_id = playlist_id
